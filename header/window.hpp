@@ -4,8 +4,8 @@
 class Window{
 	SDL_Window* window;
 	SDL_Renderer* renderer;
-	void Render();
 public:
+	void Render();
 	int Setup();
 	~Window();
 };

@@ -1,8 +1,10 @@
 #include "../header/window.hpp"
+#include "../header/Update.hpp"
+#include "../header/Global.hpp"
 #include <iostream>
 
 int main(){
-	Window testWindow;
 	std::cout << "Hello world" << std::endl;
-	testWindow.Setup();
+	if (mainWindow->Setup() != 0) return -1;
+	Update();
 }

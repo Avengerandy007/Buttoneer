@@ -18,7 +18,7 @@ endif
 # Files
 SRCS := $(wildcard src/*.cpp)
 OBJS := $(SRCS:.cpp=.o)
-TARGET = Breakout
+TARGET = Buttoneer
 
 # Build app
 $(TARGET): $(OBJS)
