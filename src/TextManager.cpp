@@ -1,0 +1,76 @@
+#include "../header/TextManager.hpp"
+#include <SDL2/SDL_surface.h>
+#include <SDL2/SDL_ttf.h>
+#include <SDL2/SDL_video.h>
+#include <SDL2/SDL_render.h>
+#include <iostream>
+#include <iterator>
+#include <memory>
+#include <vector>
+#include "../header/Global.hpp"
+
+TTF_Font* TextManager::font = nullptr;
+
+//Text line definitions
+TextLine::TextLine(const char* msg){
+	testTextManager.lines.push_back(this);
+	color = {255, 255, 255, 255};
+	rect.x = 10;
+	SDL_GetWindowSize(mainWindow->window, &rect.w, &rect.h);
+	rect.w /= 2;
+	rect.h /= 10;
+	rect.y = FindIndexOf<TextLine>(this, &testTextManager.lines) * rect.h;
+	text = msg;
+	CreateTexture();
+}
+
+void TextLine::CreateTexture(){
+	surface = TTF_RenderUTF8_Solid_Wrapped(TextManager::font, text, color, (uint32_t)rect.w);
+	if(!surface) std::cerr<< "Could not create surface: " << SDL_GetError() << std::endl;
+	texture = SDL_CreateTextureFromSurface(mainWindow->renderer, surface);
+	if(!texture) std::cerr<< "Could not create texture: " << SDL_GetError() << std::endl;
+	SDL_FreeSurface(surface);
+}
+
+void TextLine::Render(){
+	SDL_RenderCopy(mainWindow->renderer, texture, nullptr, &rect);
+}
+
+TextLine::~TextLine(){
+	SDL_DestroyTexture(texture);
+}
+
+
+//Text manager
+
+void TextManager::CreateText(std::string msg){
+	new TextLine(msg.c_str());
+}
+
+void TextManager::Start(){
+	font = TTF_OpenFont("BitcountPropDouble.ttf", 120); 
+	if (!font){
+		std::cerr<< "Font could not be oppened: " << SDL_GetError() << std::endl;
+	}
+}
+
+void TextManager::MoveTextUp(){
+	int currentWinH;
+	SDL_GetWindowSize(mainWindow->window, nullptr, &currentWinH);
+	if (lines[lines.size() - 1]->rect.y > currentWinH){
+		for(TextLine* line : lines){
+			line->rect.y -= line->rect.h;
+			if (line->rect.y < 0){
+				int i = FindIndexOf<TextLine>(line, &lines);
+				lines.erase(std::begin(lines) + i);
+			}
+		}
+	}
+}
+
+TextManager::~TextManager(){
+	for(TextLine* line : lines){
+		delete line;
+	}
+	lines.clear();
+}

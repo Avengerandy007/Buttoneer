@@ -1,7 +1,9 @@
 #include "../header/window.hpp"
+#include "../header/TextManager.hpp"
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_error.h>
 #include <SDL2/SDL_render.h>
+#include <SDL2/SDL_ttf.h>
 #include <SDL2/SDL_video.h>
 #include <iostream>
 
@@ -11,6 +13,11 @@ int Window::Setup(){
 
 	if (SDL_Init(SDL_INIT_VIDEO) != 0){
 		std::cout << "There was a problem initialising SDL2: " << SDL_GetError() << std::endl;
+		return -1;
+	}
+	
+	if (TTF_Init() != 0){
+		std::cout << "There was a problem init TTF: " << SDL_GetError() << std::endl;
 		return -1;
 	}
 
@@ -40,7 +47,10 @@ void Window::Render(){
 Window::~Window(){
 	SDL_DestroyRenderer(renderer);
 	SDL_DestroyWindow(window);
+	TTF_CloseFont(TextManager::font);
+	TTF_Quit();
 	SDL_Quit();
+	std::cout << "Goodbye cruel world!" << std::endl;
 }
 
 
