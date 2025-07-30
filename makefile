@@ -1,6 +1,6 @@
 # Compiler
-#CXX = x86_64-w64-mingw32-g++
-CXX = clang++
+CXX = x86_64-w64-mingw32-g++
+#CXX = clang++
 
 # SDL2 Path (Windows dev libs)
 SDL2Win_PATH = /usr/include/SDL2Win
@@ -12,7 +12,7 @@ LDFLAGS  = $(shell sdl2-config --libs)
 else
 # Windows deployment
 CXXFLAGS = -Wall -g -I$(SDL2Win_PATH)/include -static-libstdc++ -static-libgcc -DSDL_MAIN_HANDLED -O2 -DNDEBUG
-LDFLAGS  = -L./lib -lSDL2main -lSDL2 -mconsole#-mwindows
+LDFLAGS  = -L$(SDL2Win_PATH)/lib -lSDL2main -lSDL2 -mconsole#-libSDL2ttf -mconsole#-mwindows
 endif
 
 # Files
