@@ -11,10 +11,10 @@ void InitMenu(){
 	std::ostringstream stream;
 	stream << "Buttoneer"; 
 	UniVersalTextManager->CreateText(stream.str());
-	stream.str("");
+	stream.str(std::string());
 	stream << "Press 'a' to view about page.";
 	UniVersalTextManager->CreateText(stream.str());
-	stream.str("");
+	stream.str(std::string());
 	stream << "Press 's' to start the game.";
 	UniVersalTextManager->CreateText(stream.str());
 }

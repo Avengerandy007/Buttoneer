@@ -10,6 +10,7 @@
 #include "../header/TextManager.hpp"
 #include "../header/Global.hpp"
 
+
 auto timerStart = std::chrono::system_clock::now();
 
 void PollEvents(){
@@ -26,15 +27,13 @@ void PollEvents(){
 						delete UniVersalTextManager;
 						UniVersalTextManager = new TextManager();
 						inMenu = false;
+						timerStart = std::chrono::system_clock::now();
 					}
 					break;
 				}
 				char help = currentInstruction;
 				if (e.key.keysym.sym == SDL_GetKeyFromName(&help)){
-					currentInstruction = TextManager::GetRandomChar();
-					std::ostringstream stream;
-					stream << "Please type: " << currentInstruction; 
-					UniVersalTextManager->CreateText(stream.str());
+					CreateInstruction();
 					timerStart = std::chrono::system_clock::now();
 				}else{
 					UniVersalTextManager->CreateError("Dang, you don't know your keys");

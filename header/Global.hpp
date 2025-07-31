@@ -21,3 +21,5 @@ int FindIndexOf(T* var, std::vector<T*>* list){
 	}
 	return -1;
 }
+
+void CreateInstruction();
