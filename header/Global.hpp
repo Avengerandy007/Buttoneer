@@ -6,8 +6,7 @@
 
 extern bool running;
 extern std::shared_ptr<Window> mainWindow;
-//extern std::shared_ptr<TextManager> testTextManager;
-extern TextManager testTextManager;
+extern TextManager* UniVersalTextManager;
 
 template<typename T>
 int FindIndexOf(T* var, std::vector<T*>* list){

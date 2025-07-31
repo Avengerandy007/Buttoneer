@@ -4,22 +4,24 @@
 #include <SDL2/SDL_video.h>
 #include <SDL2/SDL_render.h>
 #include <iostream>
+#include <ctime>
 #include <iterator>
 #include <memory>
 #include <vector>
 #include "../header/Global.hpp"
 
 TTF_Font* TextManager::font = nullptr;
+const std::string TextManager::possibleKeys = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
 
 //Text line definitions
 TextLine::TextLine(const char* msg){
-	testTextManager.lines.push_back(this);
+	UniVersalTextManager->lines.push_back(this);
 	color = {255, 255, 255, 255};
 	rect.x = 10;
 	SDL_GetWindowSize(mainWindow->window, &rect.w, &rect.h);
 	rect.w /= 2;
 	rect.h /= 10;
-	rect.y = FindIndexOf<TextLine>(this, &testTextManager.lines) * rect.h;
+	rect.y = FindIndexOf<TextLine>(this, &UniVersalTextManager->lines) * rect.h;
 	text = msg;
 	CreateTexture();
 }
@@ -48,9 +50,15 @@ void TextManager::CreateText(std::string msg){
 }
 
 void TextManager::Start(){
-	font = TTF_OpenFont("BitcountPropDouble.ttf", 120); 
+	font = TTF_OpenFont("data/BitcountPropDouble.ttf", 120); 
 	if (!font){
 		std::cerr<< "Font could not be oppened: " << SDL_GetError() << std::endl;
+	}
+}
+
+void TextManager::Render(){
+	for(TextLine* line : lines){
+		line->Render();
 	}
 }
 
@@ -71,6 +79,12 @@ void TextManager::MoveTextUp(){
 TextManager::~TextManager(){
 	for(TextLine* line : lines){
 		delete line;
+		line = nullptr;
 	}
 	lines.clear();
+}
+
+char TextManager::GetRandomChar(){
+	srand(time(NULL));
+	return possibleKeys[rand() % possibleKeys.size()];
 }

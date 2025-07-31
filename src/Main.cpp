@@ -7,6 +7,8 @@
 int main(){
 	std::cout << "Hello world!" << std::endl;
 	if (mainWindow->Setup() != 0) return -1;
-	testTextManager.Start();
+	UniVersalTextManager = new TextManager();
+	UniVersalTextManager->Start();
 	Update();
+	delete UniVersalTextManager;
 }
