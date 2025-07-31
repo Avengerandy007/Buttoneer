@@ -23,6 +23,10 @@ void PollEvents(){
 					UniVersalTextManager->CreateText(stream.str());
 				}else{
 					UniVersalTextManager->CreateError("Cmon dude just press the dang button, it ain't that hard");
+					std::ostringstream stream;
+					stream << "Please type: " << currentInstruction; 
+					UniVersalTextManager->CreateText(stream.str());
+
 				}
 				break;
 		}
@@ -35,5 +39,6 @@ void Update(){
 		mainWindow->Render();
 		UniVersalTextManager->Render();
 		SDL_RenderPresent(mainWindow->renderer);
+		SDL_Delay(6);
 	}
 }

@@ -8,24 +8,24 @@
 #include <vector>
 
 class TextLine{
-	SDL_Surface* surface;
 	SDL_Texture* texture;
 protected:
 	SDL_Color color;
 	void CreateTexture();
 	
 public:
+	SDL_Surface* surface;
 	SDL_Rect rect;
 	const char* text;
 	void Render();
-	TextLine(const char* msg);
+	TextLine(const char* msg, int Y);
 	TextLine();
-	~TextLine();
+	virtual ~TextLine();
 };
 
 class ErrorLine : public TextLine{
 public:
-	ErrorLine(const char* msg);
+	ErrorLine(const char* msg, int Y);
 };
 
 class TextManager{
