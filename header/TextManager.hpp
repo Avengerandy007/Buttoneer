@@ -10,21 +10,22 @@
 class TextLine{
 	SDL_Surface* surface;
 	SDL_Texture* texture;
-	void CreateTexture();
 protected:
 	SDL_Color color;
+	void CreateTexture();
 	
 public:
 	SDL_Rect rect;
 	const char* text;
 	void Render();
 	TextLine(const char* msg);
+	TextLine();
 	~TextLine();
 };
 
 class ErrorLine : public TextLine{
 public:
-	ErrorLine();
+	ErrorLine(const char* msg);
 };
 
 class TextManager{
@@ -38,6 +39,6 @@ public:
 	void Render();
 	void MoveTextUp();
 	void CreateText(std::string msg);
-	void CreateError();
+	void CreateError(std::string msg);
 	static char GetRandomChar();
 };

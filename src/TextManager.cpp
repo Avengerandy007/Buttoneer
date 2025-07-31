@@ -14,6 +14,9 @@ TTF_Font* TextManager::font = nullptr;
 const std::string TextManager::possibleKeys = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
 
 //Text line definitions
+
+TextLine::TextLine(){}
+
 TextLine::TextLine(const char* msg){
 	UniVersalTextManager->lines.push_back(this);
 	color = {255, 255, 255, 255};
@@ -27,7 +30,7 @@ TextLine::TextLine(const char* msg){
 }
 
 void TextLine::CreateTexture(){
-	surface = TTF_RenderUTF8_Solid_Wrapped(TextManager::font, text, color, (uint32_t)rect.w);
+	surface = TTF_RenderUTF8_Blended_Wrapped(TextManager::font, text, color, rect.w);
 	if(!surface) std::cerr<< "Could not create surface: " << SDL_GetError() << std::endl;
 	texture = SDL_CreateTextureFromSurface(mainWindow->renderer, surface);
 	if(!texture) std::cerr<< "Could not create texture: " << SDL_GetError() << std::endl;
@@ -42,11 +45,25 @@ TextLine::~TextLine(){
 	SDL_DestroyTexture(texture);
 }
 
-
+//Error text
+ErrorLine::ErrorLine(const char* msg){
+	UniVersalTextManager->lines.push_back(this);
+	color = {255, 0, 0, 255};
+	rect.x = 10;
+	SDL_GetWindowSize(mainWindow->window, &rect.w, &rect.h);
+	rect.h /= 5;
+	rect.y = FindIndexOf<TextLine>(this, &UniVersalTextManager->lines) * rect.h;
+	text = msg;
+	CreateTexture();
+}
 //Text manager
-
 void TextManager::CreateText(std::string msg){
 	new TextLine(msg.c_str());
+	MoveTextUp();
+}
+void TextManager::CreateError(std::string msg){
+	new ErrorLine(msg.c_str());
+	MoveTextUp();
 }
 
 void TextManager::Start(){
@@ -65,12 +82,13 @@ void TextManager::Render(){
 void TextManager::MoveTextUp(){
 	int currentWinH;
 	SDL_GetWindowSize(mainWindow->window, nullptr, &currentWinH);
-	if (lines[lines.size() - 1]->rect.y > currentWinH){
+	if (lines[lines.size() - 1]->rect.y >= currentWinH - lines[lines.size() - 1]->rect.h){
 		for(TextLine* line : lines){
 			line->rect.y -= line->rect.h;
 			if (line->rect.y < 0){
 				int i = FindIndexOf<TextLine>(line, &lines);
 				lines.erase(std::begin(lines) + i);
+				delete line;
 			}
 		}
 	}

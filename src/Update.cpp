@@ -1,4 +1,5 @@
 #include <SDL2/SDL_events.h>
+#include <SDL2/SDL_keyboard.h>
 #include <memory>
 #include <string>
 #include <sstream>
@@ -14,10 +15,15 @@ void PollEvents(){
 				running = false;
 				break;
 			case SDL_KEYDOWN:
-				std::ostringstream stream;
-				stream << "Please type: " << TextManager::GetRandomChar();
-				UniVersalTextManager->CreateText(stream.str());
-				UniVersalTextManager->MoveTextUp();
+				char help = currentInstruction;
+				if (e.key.keysym.sym == SDL_GetKeyFromName(&help)){
+					currentInstruction = TextManager::GetRandomChar();
+					std::ostringstream stream;
+					stream << "Please type: " << currentInstruction; 
+					UniVersalTextManager->CreateText(stream.str());
+				}else{
+					UniVersalTextManager->CreateError("Cmon dude just press the dang button, it ain't that hard");
+				}
 				break;
 		}
 	}
