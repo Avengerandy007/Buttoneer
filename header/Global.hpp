@@ -5,6 +5,7 @@
 #include <vector>
 
 extern bool running;
+extern bool inMenu;
 extern std::shared_ptr<Window> mainWindow;
 extern TextManager* UniVersalTextManager;
 extern char currentInstruction;
