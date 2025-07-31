@@ -24,6 +24,7 @@ void CheckErrors(){
 		stream.str("");
 		stream << "Final Score: " << score;
 		UniVersalTextManager->CreateText(stream.str());
+		score = 0;
 	}
 }
 
