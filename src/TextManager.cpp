@@ -17,8 +17,7 @@ const std::string TextManager::possibleKeys = "abcdefghijklmnopqrstuvwxyz0123456
 
 TextLine::TextLine(){}
 
-TextLine::TextLine(const char* msg, int Y){
-	UniVersalTextManager->lines.push_back(this);
+TextLine::TextLine(const std::string msg, int Y){
 	color = {255, 255, 255, 255};
 	rect.x = 10;
 	SDL_GetWindowSize(mainWindow->window, &rect.w, &rect.h);
@@ -30,7 +29,7 @@ TextLine::TextLine(const char* msg, int Y){
 }
 
 void TextLine::CreateTexture(){
-	surface = TTF_RenderUTF8_Blended_Wrapped(TextManager::font, text, color, rect.w);
+	surface = TTF_RenderUTF8_Blended_Wrapped(TextManager::font, text.c_str(), color, rect.w);
 	if(!surface) std::cerr<< "Could not create surface: " << SDL_GetError() << std::endl;
 	texture = SDL_CreateTextureFromSurface(mainWindow->renderer, surface);
 	if(!texture) std::cerr<< "Could not create texture: " << SDL_GetError() << std::endl;
@@ -46,12 +45,12 @@ TextLine::~TextLine(){
 }
 
 //Error text
-ErrorLine::ErrorLine(const char* msg, int Y){
-	UniVersalTextManager->lines.push_back(this);
+ErrorLine::ErrorLine(const std::string msg, int Y){
 	color = {255, 0, 0, 255};
-	rect.x = 10;
 	SDL_GetWindowSize(mainWindow->window, &rect.w, &rect.h);
-	rect.h /= 5;
+	rect.x = rect.w / 2;
+	rect.w /= 2;
+	rect.h /= 10;
 	rect.y = Y;
 	text = msg;
 	CreateTexture();
@@ -62,16 +61,27 @@ void TextManager::CreateText(std::string msg){
 	if (!lines.empty()){
 		y = lines.back()->rect.y + lines.back()->surface->h;
 	}
-	new TextLine(msg.c_str(), y);
+	TextLine* newLine = new TextLine(msg.c_str(), y);
+	UniVersalTextManager->lines.push_back(newLine);
 	MoveTextUp();
 }
 void TextManager::CreateError(std::string msg){
-	int y = 0;
-	if (!lines.empty()){
-		y = lines.back()->rect.y + lines.back()->surface->h;
+	if (!font){
+		std::cerr << "Font not loaded yet" << std::endl;
+		return;
 	}
-	new ErrorLine(msg.c_str(), y);
-	MoveTextUp();
+	int y = 0;
+	if (!errorLines.empty()){
+		y = errorLines.back()->rect.y + errorLines.back()->surface->h;
+	}
+	ErrorLine* newLine = new ErrorLine(msg.c_str(), y);
+	UniVersalTextManager->errorLines.push_back(newLine);
+}
+
+void TextManager::RenderErrors(){
+	for(ErrorLine* line : errorLines){
+		line->Render();
+	}
 }
 
 void TextManager::Start(){
@@ -112,6 +122,11 @@ TextManager::~TextManager(){
 		line = nullptr;
 	}
 	lines.clear();
+	for (ErrorLine* line : errorLines){
+		delete line;
+		line = nullptr;
+	}
+	errorLines.clear();
 }
 
 char TextManager::GetRandomChar(){

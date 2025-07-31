@@ -11,7 +11,7 @@ CXXFLAGS = -Wall -g $(shell sdl2-config --cflags)
 LDFLAGS  = $(shell sdl2-config --libs)
 else
 # Windows deployment
-CXXFLAGS = -Wall -g -I$(SDL2Win_PATH)/include -static-libstdc++ -static-libgcc -DSDL_MAIN_HANDLED -O2 -DNDEBUG
+CXXFLAGS = -Wall -g -I$(SDL2Win_PATH)/include -static-libstdc++ -static-libgcc -DSDL_MAIN_HANDLED -O0 #-O2 -DNDEBUG
 LDFLAGS  = -L$(SDL2Win_PATH)/lib -lSDL2main -lSDL2 -lSDL2_ttf -mconsole#-mwindows
 endif
 

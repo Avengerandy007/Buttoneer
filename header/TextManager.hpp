@@ -16,16 +16,16 @@ protected:
 public:
 	SDL_Surface* surface;
 	SDL_Rect rect;
-	const char* text;
+	std::string text;
 	void Render();
-	TextLine(const char* msg, int Y);
+	TextLine(const std::string msg, int Y);
 	TextLine();
 	virtual ~TextLine();
 };
 
 class ErrorLine : public TextLine{
 public:
-	ErrorLine(const char* msg, int Y);
+	ErrorLine(const std::string msg, int Y);
 };
 
 class TextManager{
@@ -33,10 +33,12 @@ public:
 	static TTF_Font* font;
 	static const std::string possibleKeys;
 	std::vector<TextLine*> lines;
+	std::vector<ErrorLine*> errorLines;
 	std::vector<TextLine*> preRecordedLines();
 	void Start();
 	~TextManager();
 	void Render();
+	void RenderErrors();
 	void MoveTextUp();
 	void CreateText(std::string msg);
 	void CreateError(std::string msg);
