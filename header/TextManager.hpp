@@ -8,8 +8,8 @@
 #include <vector>
 
 class TextLine{
-	SDL_Texture* texture;
 protected:
+	SDL_Texture* texture;
 	SDL_Color color;
 	void CreateTexture();
 	

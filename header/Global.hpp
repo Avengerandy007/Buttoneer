@@ -1,11 +1,14 @@
 #pragma once
 #include "TextManager.hpp"
 #include "window.hpp"
+#include <cstdint>
 #include <memory>
 #include <vector>
 
 extern bool running;
 extern bool inMenu;
+extern bool gameOver;
+extern uint32_t score;
 extern std::shared_ptr<Window> mainWindow;
 extern TextManager* UniVersalTextManager;
 extern char currentInstruction;

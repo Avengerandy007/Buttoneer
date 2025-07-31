@@ -13,6 +13,20 @@
 
 auto timerStart = std::chrono::system_clock::now();
 
+void CheckErrors(){
+	if (UniVersalTextManager->errorLines.size() > 3){
+		gameOver = true;
+		delete UniVersalTextManager;
+		UniVersalTextManager = new TextManager();
+		std::stringstream stream;
+		stream << "Game Over";
+		UniVersalTextManager->CreateText(stream.str());
+		stream.str("");
+		stream << "Final Score: " << score;
+		UniVersalTextManager->CreateText(stream.str());
+	}
+}
+
 void PollEvents(){
 	SDL_Event e;
 	while(SDL_PollEvent(&e) >= 1){
@@ -28,16 +42,26 @@ void PollEvents(){
 						UniVersalTextManager = new TextManager();
 						inMenu = false;
 						timerStart = std::chrono::system_clock::now();
+						CreateInstruction();
 					}
 					break;
-				}
-				char help = currentInstruction;
-				if (e.key.keysym.sym == SDL_GetKeyFromName(&help)){
+				}else if (gameOver){
+					gameOver = false;
+					delete UniVersalTextManager;
+					UniVersalTextManager = new TextManager;
+					timerStart = std::chrono::system_clock::now();
 					CreateInstruction();
+					break;
+				}
+				if (e.key.keysym.sym == SDL_GetKeyFromName(&currentInstruction) && !gameOver){
+					CreateInstruction();
+					score++;
 					timerStart = std::chrono::system_clock::now();
 				}else{
+					if(gameOver) break;
 					UniVersalTextManager->CreateError("Dang, you don't know your keys");
 					timerStart = std::chrono::system_clock::now();
+					
 				}
 				break;
 		}
@@ -51,10 +75,11 @@ void Update(){
 		UniVersalTextManager->Render();
 		UniVersalTextManager->RenderErrors();
 		SDL_RenderPresent(mainWindow->renderer);
+		CheckErrors();
 		const auto timerNow = std::chrono::system_clock::now();
 		const auto timerDiff = timerNow - timerStart;
-		if (timerDiff.count() > 2e9 && !inMenu){
-			UniVersalTextManager->CreateError("Times is up");
+		if (timerDiff.count() > 2e9 && !inMenu && !gameOver){
+			UniVersalTextManager->CreateError("Waited for too long");
 			timerStart = std::chrono::system_clock::now();
 
 		}

@@ -55,6 +55,7 @@ ErrorLine::ErrorLine(const std::string msg, int Y){
 	text = msg;
 	CreateTexture();
 }
+
 //Text manager
 void TextManager::CreateText(std::string msg){
 	int y = 0;
