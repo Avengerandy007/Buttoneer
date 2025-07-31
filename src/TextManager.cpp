@@ -102,11 +102,11 @@ void TextManager::MoveTextUp(){
 	if (lines.size() == 0) return; 
 	int currentWinH;
 	SDL_GetWindowSize(mainWindow->window, nullptr, &currentWinH);
-	if (lines[lines.size() - 1]->rect.y > currentWinH - lines[lines.size() - 1]->rect.h){
+	if (lines[lines.size() - 1]->rect.y > currentWinH - lines[lines.size() - 1]->surface->h){
 		auto it = lines.begin();
 		while(it != lines.end()){
 			TextLine* line = *it;
-			line->rect.y -= line->rect.h;
+			line->rect.y -= line->surface->h;
 			if (line->rect.y + line->surface->h < 0){
 				delete line;
 				it = lines.erase(it);
