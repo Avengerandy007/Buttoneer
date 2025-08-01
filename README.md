@@ -5,6 +5,7 @@ Game for GMTK2025, inspired by the job that Stanley from The Stanley Parable has
 Make sure you have Make installed and in your system PATH and the MinGW version of G++. 
 Download the binaries for SDL2 and the dev files.
 Place them in your desired directory.
+
 Change
 ```Make
 SDL2Win_PATH = /usr/include/SDL2Win
