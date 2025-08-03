@@ -60,7 +60,7 @@ void PollEvents(){
 					timerStart = std::chrono::system_clock::now();
 				}else{
 					if(gameOver) break;
-					UniVersalTextManager->CreateError("Dang, you don't know your keys");
+					UniVersalTextManager->CreateError("Wrong input");
 					timerStart = std::chrono::system_clock::now();
 					
 				}
@@ -79,7 +79,7 @@ void Update(){
 		CheckErrors();
 		const auto timerNow = std::chrono::system_clock::now();
 		const auto timerDiff = timerNow - timerStart;
-		if (timerDiff.count() > 2e9 && !inMenu && !gameOver){
+		if (timerDiff.count() > 1e9 && !inMenu && !gameOver){
 			UniVersalTextManager->CreateError("Waited for too long");
 			timerStart = std::chrono::system_clock::now();
 
